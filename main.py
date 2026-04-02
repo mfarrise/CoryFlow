@@ -27,6 +27,8 @@ class MyRibbon(QWidget):
         self.x_location=self.screen_geo.width()
         self.window_height=40
         self.setGeometry(0,self.screen_geo.height(),self.screen_geo.width(),self.window_height)
+
+
     def update_text_position(self):
         self.x_location -= 2
         if self.x_location < -(self.text_width):
@@ -62,3 +64,10 @@ if __name__ == '__main__':
     window = MyRibbon()
     window.show()
     sys.exit(app.exec())
+
+# from PySide6.QtWidgets import QColorDialog
+#
+# color = QColorDialog.getColor()
+#
+# if color.isValid():
+#     print(color.name())

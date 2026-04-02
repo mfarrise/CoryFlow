@@ -17,9 +17,10 @@ class MyRibbon(QWidget):
         self.metrics = QFontMetrics(self.font)
         self.text_width=self.metrics.horizontalAdvance(self.test_text)
 
-        self.screen_geo=QApplication.primaryScreen().geometry()
+        self.screen_geo=QApplication.primaryScreen().availableGeometry()
         self.x_location=self.screen_geo.width()
-        self.setFixedSize(self.screen_geo.width(),40)
+        self.window_height=40
+        self.setFixedSize(self.screen_geo.width(),self.window_height)
     def update_text_position(self):
         self.x_location -= 2
         if self.x_location < -(self.text_width):
@@ -27,12 +28,13 @@ class MyRibbon(QWidget):
 
         self.update()
     def paintEvent(self, event):
-        painter = QPainter()
-        painter.begin(self)
-        painter.setPen(QColor("Red"))
-        painter.setBrush(QColor("white"))
-        painter.font=self.font
-        painter.drawText(self.x_location,30, self.test_text)
+        painter = QPainter(self)
+
+        painter.setPen(QColor("White"))
+        painter.fillRect(self.rect(), QColor("Blue"))
+        painter.setFont(self.font)
+        y=(self.metrics.ascent()+self.window_height//2-(self.metrics.ascent()//2))
+        painter.drawText(self.x_location,y, self.test_text)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

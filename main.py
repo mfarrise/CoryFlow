@@ -68,7 +68,7 @@ class MyRibbon(QWidget):
             self.news_item=self.get_next_news_item()
             self.text_width = self.metrics.horizontalAdvance(self.news_item[0])
 
-            print(self.news_item)
+            # print(self.news_item)
         self.update()
     def paintEvent(self, event):
         
@@ -84,7 +84,7 @@ class MyRibbon(QWidget):
     def get_next_news_item(self):
         
         self.counter+=1
-        print(self.counter)
+        # print(self.counter)
         if self.counter >= len(self.news_list) or not self.news_list:# if reached end or not loaded
             self.news_list=parse_feeds_to_list() #get new list of news and reset counter
             random.shuffle(self.news_list)

@@ -31,6 +31,7 @@ def parse_feeds_to_list():
         except Exception as e:
             print("RSS fetch failed:", e)
             return []
+        print("RSS fetch success:", feed.feed.title)
         for entry in feed.entries:
             string = ""  # start temp internal string
             string += getattr(feed.feed,"title","") + ": "  # start it with news source name
@@ -38,7 +39,7 @@ def parse_feeds_to_list():
             string += getattr(entry, "summary","") + "," # add the description
             final_parse_list.append([string,getattr(entry, "link","")]) # make list of dictionaries {string,link}
             #rinse and repeat
-    print(final_parse_list)
+    # print(final_parse_list)
 
     return final_parse_list # this is a list of two item lists ,each has first item string,other link of the string
 

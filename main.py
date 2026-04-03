@@ -102,3 +102,16 @@ if __name__ == '__main__':
 #
 # if color.isValid():
 #     print(color.name())
+
+
+#corystream
+
+# pyinstaller Main.py \
+# --noconfirm \
+# --onedir \
+# --console \
+# --collect-all PySide6 \
+# --copy-metadata PySide6 \
+# --distpath build_output/dist \
+# --workpath build_output/build \
+# --specpath build_output

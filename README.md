@@ -80,8 +80,8 @@ This project is part of a broader effort to:
 
 * GUI for managing RSS feeds
 * Better text formatting and truncation
-* Theme customization
-* Multi-line ticker support
+* font family selection
+* now its UBUNTU u can change it if u dont want in main.py
 
 ---
 

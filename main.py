@@ -4,19 +4,40 @@ import sys
 from PySide6.QtWidgets import QApplication, QWidget, QSizePolicy
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QPainter, QFont, QFontMetrics, QPaintEvent, QColor, Qt
-from FeedParsing import parse_feeds_to_list
+from feedParsing import parse_feeds_to_list
+from settings import SettingsWindow
+from jsonResolve import load_json
 
 class MyRibbon(QWidget):
     def __init__(self):
         super().__init__()
+        self.default_settings_dict = {
+            "back_ground_color": "blue",
+            "font_color": "white",
+            "font_size": 12,
+            "opacity": 1,
+            "speed": 2
+        }
+
+        self.settings_dict= load_json("settings.json",self.default_settings_dict)
+
+        self.back_ground_color = self.settings_dict["back_ground_color"]
+        self.scroll_speed=self.settings_dict["speed"] #the one from the settings
+        self.applied_scroll_speed=self.scroll_speed    #the one applied ((needed for start and stop
+        self.font_size=self.settings_dict["font_size"]
+        self.font_color=self.settings_dict["font_color"]
+        self.window_opacity=self.settings_dict["opacity"]
+
+        self.settings_window=None
         self.counter=-1
         self.news_list=[]
-        self.font = QFont("Ubuntu", 14)
+        self.setWindowOpacity(self.window_opacity)
+        self.font = QFont("Ubuntu", self.font_size)
         self.font.setBold(True)
         self.metrics = QFontMetrics(self.font)
         self.news_item=self.get_next_news_item()
         self.text_width = self.metrics.horizontalAdvance(self.news_item[0])
-
+        self.temp_speed=None
         self.shown_text=None
 
         
@@ -25,8 +46,7 @@ class MyRibbon(QWidget):
         self.timer.start(16)
         self.setWindowFlags(
             Qt.FramelessWindowHint |
-            Qt.WindowStaysOnTopHint |
-            Qt.Tool
+            Qt.WindowStaysOnTopHint
         )
 
         
@@ -42,7 +62,7 @@ class MyRibbon(QWidget):
     def update_text_position(self):
         
 
-        self.x_location -= 2
+        self.x_location -= self.applied_scroll_speed
         if self.x_location < -(self.text_width):
             self.x_location = self.screen_geo.width()
             self.news_item=self.get_next_news_item()
@@ -55,8 +75,8 @@ class MyRibbon(QWidget):
             
         painter = QPainter(self)
 
-        painter.setPen(QColor("White"))
-        painter.fillRect(self.rect(), QColor("Blue"))
+        painter.setPen(QColor(self.font_color))
+        painter.fillRect(self.rect(), QColor(self.back_ground_color))
         painter.setFont(self.font)
         y=(self.metrics.ascent()+self.window_height//2-(self.metrics.ascent()//2))
         painter.drawText(self.x_location,y, self.news_item[0])
@@ -80,12 +100,46 @@ class MyRibbon(QWidget):
         if event.button() == Qt.LeftButton:
             self.drag_pos = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
 
+            if self.applied_scroll_speed !=0:
+                self.temp_speed = self.applied_scroll_speed  # keep the value u for when moving again
+                self.applied_scroll_speed = 0
+
+            elif self.applied_scroll_speed ==0:
+                self.applied_scroll_speed = self.temp_speed
+        if event.button() ==Qt.RightButton:
+            print("right clicked")
+            self.settings_window=SettingsWindow(self)
+            # self.settings_window.setParent(self)
+            self.settings_window.show()
+    def wheelEvent(self, event):
+        delta = event.angleDelta().y()
+        print("scroll spped:",self.applied_scroll_speed)
+        print("Scroll:", delta)
+        if self.applied_scroll_speed >=40 :
+            self.applied_scroll_speed =39
+        if self.applied_scroll_speed <40 :
+            self.applied_scroll_speed+=delta//50
+            if self.applied_scroll_speed <0:
+                self.applied_scroll_speed=0
+
     def mouseMoveEvent(self, event):
         if event.buttons() & Qt.LeftButton:
             self.move(event.globalPosition().toPoint() - self.drag_pos)
 
     def mouseReleaseEvent(self, event):
         self.drag_pos = None
+
+    def mouseDoubleClickEvent(self, event):
+        pass
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            print("Escape pressed")
+            self.close()
+
+
+
+
 if __name__ == '__main__':
     if sys.platform.startswith("linux"):
         if os.environ.get("XDG_SESSION_TYPE") == "wayland":
@@ -105,12 +159,11 @@ if __name__ == '__main__':
 
 
 #corystream
-
-# pyinstaller Main.py \
+#
+# pyinstaller main.py \
 # --noconfirm \
 # --onedir \
 # --console \
-# --collect-all PySide6 \
 # --copy-metadata PySide6 \
 # --distpath build_output/dist \
 # --workpath build_output/build \

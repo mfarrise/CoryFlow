@@ -1,18 +1,15 @@
 import feedparser
 import certifi
 import requests
-
+from jsonResolve import load_json
 
 
 def parse_feeds_to_list():
+
+
     rss_url_list=[]#ill put them in list to make it scalable for multiple feeds from future json
     rss_url_list.append("https://feeds.bbci.co.uk/news/rss.xml")
-    rss_url_list.append("https://journals.lww.com/CJASN/_layouts/15/OAKS.Journals/feed.aspx?FeedType=CurrentIssue")
-    rss_url_list.append("https://www.nejm.org/action/showFeed?jc=nejm&type=etoc&feed=rss")
-    rss_url_list.append("https://www.techradar.com/feeds.xml")
-    rss_url_list.append("https://feeds.feedburner.com/ign/all")
-    rss_url_list.append("https://academic.oup.com/rss/site_5333/3199.xml")
-
+    rss_url_list=load_json("feeds_list.json",rss_url_list)
     final_parse_list = []
 
 

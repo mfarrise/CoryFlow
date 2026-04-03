@@ -1,6 +1,8 @@
 import os
 import random
 import sys
+import webbrowser
+
 from PySide6.QtWidgets import QApplication, QWidget, QSizePolicy
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QPainter, QFont, QFontMetrics, QPaintEvent, QColor, Qt
@@ -130,7 +132,7 @@ class MyRibbon(QWidget):
         self.drag_pos = None
 
     def mouseDoubleClickEvent(self, event):
-        pass
+        webbrowser.open(self.news_item[1])
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:

@@ -31,7 +31,7 @@ def parse_feeds_to_list():
         except Exception as e:
             print("RSS fetch failed:", e)
             return []
-        print("RSS fetch success:", getattr(feed.feed,"title",""))
+        print("RSS fetch success:", getattr(feed.feed,"title",""),url)
         for entry in feed.entries:
             string = ""  # start temp internal string
             string += getattr(feed.feed,"title","") + ": "  # start it with news source name

@@ -15,3 +15,4 @@ def load_json(path, default_data):
 def write_json(path, data):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
+        

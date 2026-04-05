@@ -3,6 +3,8 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QGridLayout, QPushButton, QL
 
 from WindowPositionManipulations import center_window
 from colorPicker import pick_color
+from editFeedsJson import edit_feeds_window
+from getBaseDir import get_base_dir
 from jsonResolve import load_json,write_json
 
 class SettingsWindow(QWidget):
@@ -10,7 +12,7 @@ class SettingsWindow(QWidget):
         super().__init__()
         self.main_window = main_window
 
-        self.settings_dict = load_json("settings.json", self.main_window.settings_dict)
+        self.settings_dict = load_json(get_base_dir()+"settings.json", self.main_window.settings_dict)
         self.back_ground_color=""
         self.font_color=""
         self.window_opacity=1.0
@@ -50,6 +52,9 @@ class SettingsWindow(QWidget):
         self.window_height_line_edit.setText(str(self.main_window.window_height))
         self.window_height_line_edit.textChanged.connect(self.update_window_height)
 
+        self.edit_feeds_button = QPushButton("Edit Feeds")
+        self.edit_feeds_button.clicked.connect(self.edit_feeds)
+
         self.okay_button = QPushButton("Okay")
         self.okay_button.clicked.connect(self.update_json_and_close)
 
@@ -61,6 +66,7 @@ class SettingsWindow(QWidget):
         self.layout.addWidget(self.opacity_line_edit)
         self.layout.addWidget(self.window_height_label)
         self.layout.addWidget(self.window_height_line_edit)
+        self.layout.addWidget(self.edit_feeds_button)
         self.layout.addWidget(self.okay_button)
         center_window(self)
     def pick_back_ground_color(self):
@@ -95,6 +101,9 @@ class SettingsWindow(QWidget):
             self.main_window.setFixedHeight(self.window_height)
             self.settings_dict["window_height"] = self.window_height
 
+    def edit_feeds(self):
+        self.edit_feeds_window=edit_feeds_window()
+        self.edit_feeds_window.show()
     def update_json_and_close(self):
-        write_json("settings.json", self.settings_dict)
+        write_json(get_base_dir()+"settings.json", self.settings_dict)
         self.close()

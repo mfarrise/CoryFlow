@@ -8,6 +8,7 @@ from PySide6.QtWidgets import QApplication, QWidget, QSizePolicy
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QPainter, QFont, QFontMetrics, QPaintEvent, QColor, Qt
 from feedParsing import parse_feeds_to_list
+from getBaseDir import get_base_dir
 from settings import SettingsWindow
 from jsonResolve import load_json
 
@@ -23,7 +24,7 @@ class MyRibbon(QWidget):
             "window_height":40
         }
 
-        self.settings_dict= load_json("settings.json",self.default_settings_dict)
+        self.settings_dict= load_json(get_base_dir()+"settings.json",self.default_settings_dict)
 
         self.back_ground_color = self.settings_dict["back_ground_color"]
         self.scroll_speed=self.settings_dict["speed"] #the one from the settings
@@ -119,7 +120,7 @@ class MyRibbon(QWidget):
             self.settings_window.show()
     def wheelEvent(self, event):
         delta = event.angleDelta().y()
-        print("scroll spped:",self.applied_scroll_speed)
+        print("scroll speed:",self.applied_scroll_speed)
         print("Scroll:", delta)
         if self.applied_scroll_speed >=40 :
             self.applied_scroll_speed =39

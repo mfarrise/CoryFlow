@@ -1,6 +1,8 @@
 import feedparser
 import certifi
 import requests
+
+from getBaseDir import get_base_dir
 from jsonResolve import load_json
 
 
@@ -9,7 +11,7 @@ def parse_feeds_to_list():
 
     rss_url_list=[]#ill put them in list to make it scalable for multiple feeds from future json
     rss_url_list.append("https://feeds.bbci.co.uk/news/rss.xml")
-    rss_url_list=load_json("feeds_list.json",rss_url_list)
+    rss_url_list=load_json(get_base_dir()+"feeds_list.json",rss_url_list)
     final_parse_list = []
 
 
